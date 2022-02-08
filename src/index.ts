@@ -2,7 +2,7 @@ import { Application, Loader, Sprite, Text, Texture } from "pixi.js";
 import SlotController from "./SlotController";
 import HowlerMiddleware from 'howler-pixi-loader-middleware';
 import Button from "./Button";
-
+import DescriptionText from "./DescriptionText";
 const app = new Application({
     width: innerWidth,
     height:innerHeight
@@ -32,9 +32,8 @@ loader.add("btn_spin_disabled", "./assets/images/btn_spin_disabled.png")
     .add('reelStopSound4', "./assets/sounds/Reel_Stop_4.mp3")
     .add('reelStopSound5', "./assets/sounds/Reel_Stop_5.mp3")
     .load((l) => {
-        const descriptionText = new Text('Click Spin To start', { fill: 0xfffb00 });
-        descriptionText.anchor.set(0.5);
-        descriptionText.position.set(550, 480);
+        const descriptionText = new DescriptionText('Click Spin To start', 550, 480);
+
         const slotController = new SlotController(app.stage, 3, 5);
         const spinButtonDisabledSprite: Sprite = new Sprite(Texture.from('btn_spin_disabled'));
         const spinButtonHoverSprite: Sprite = new Sprite(Texture.from('btn_spin_hover'));
@@ -49,6 +48,8 @@ loader.add("btn_spin_disabled", "./assets/images/btn_spin_disabled.png")
         spinButton.width = 100;
         spinButton.height = 100;
         app.stage.addChild(spinButton);
-        slotController.setOnDropOffComplete(spinButton.setTobeEnable);
-        app.stage.addChild(descriptionText);
+        slotController.setOnDropOffComplete(spinButton);
+        app.stage.addChild(descriptionText.getContainer());
+
+        slotController.init();
     });

@@ -8,6 +8,10 @@ export default class Slot{
 
     private readonly _landingShakingEffectDuration: number = 0.05;
 
+    private readonly _dropOffLandingTime: number = 0.2;
+    
+    private readonly _dropInLandingTime: number = 0.15;
+
     private _stage: Container;
 
     private _width: number;
@@ -36,7 +40,7 @@ export default class Slot{
         this._row = row;
         this._column = column;
         this._startingY = startingY + this._height /2;
-        this._dropOffY = dropOffY + this._height /2;
+        this._dropOffY = dropOffY + this._height / 2 + this._height / 6;
 
         this._desPosX = this._column * this._width + offsetX + this._width /2;
         this._desPosY = this._row * this._height + offsetY + this._height /2;
@@ -55,15 +59,22 @@ export default class Slot{
         return this._index;
     }
 
-    public dropIn(symbolString: string, dropInFinished){
+    public dropIn = (symbolString: string, dropInFinished) => {
+        //reset rotation first
+        this._sprite.rotation = 0;
         this._sprite.texture = Texture.from(`symbol_${symbolString}`);
 
-        gsap.fromTo(this._sprite.position, {y: this._startingY}, {y: this._desPosY, duration: 0.1, 
+        gsap.fromTo(this._sprite.position, {y: this._startingY}, {y: this._desPosY, duration: this._dropInLandingTime, 
             onComplete: ()=>{
                 dropInFinished();
                 this.playFallingStopSound();
                 this.shakingABitWhenLanding();
             }});
+    }
+
+    public setInPlace = (symbolString: string) => {
+        this._sprite.texture = Texture.from(`symbol_${symbolString}`);
+        this._sprite.position.y = this._desPosY;
     }
 
     private shakingABitWhenLanding = () => {
@@ -115,6 +126,18 @@ export default class Slot{
     }
 
     public dropOff(dropOffFinished){
-        gsap.fromTo(this._sprite.position, {y: this._sprite.position.y}, {y: this._dropOffY, duration: 0.1, onComplete: ()=> dropOffFinished()});
+        this.randomiseRotationWhenDroppingOff();
+        gsap.fromTo(this._sprite.position, {y: this._sprite.position.y}, {y: this._dropOffY, duration: this._dropOffLandingTime, onComplete: ()=> dropOffFinished()});
+    }
+
+    private randomiseRotationWhenDroppingOff = () =>{
+        let rotationAmount = 0;
+        const isLeftSideRotation = Math.floor(Math.random() * 2) === 0;
+        if(isLeftSideRotation) {
+            rotationAmount -= Math.random() * this._maxRotationWhenLanding;
+        } else {
+            rotationAmount += Math.random() * this._maxRotationWhenLanding;
+        }
+        this._sprite.rotation = rotationAmount;
     }
 }
