@@ -1,4 +1,4 @@
-import { Container, DisplayObject, InteractionEvent, Loader, Text } from "pixi.js";
+import { Container, DisplayObject, TextStyle, Loader, Text } from "pixi.js";
 import SlotController from "./SlotController";
 import IOnComplete from "./IOnComplete";
 import IRenderable from "./IRenderable";
@@ -11,6 +11,34 @@ export enum buttonStates {
 }
 
 export default class Button extends Container implements IOnComplete {
+    private readonly enabledTextStyle = new TextStyle({
+        fontFamily: 'Arial',
+        fontSize: 30,
+        fontStyle: 'italic',
+        fontWeight: 'bold',
+        fill: ['#c5dbc6'],
+        dropShadow: true,
+        dropShadowColor: '#000000',
+        dropShadowBlur: 4,
+        dropShadowAngle: Math.PI / 6,
+        dropShadowDistance: 6,
+        lineJoin: 'round',
+    });
+
+    private readonly disabledTextStyle = new TextStyle({
+        fontFamily: 'Arial',
+        fontSize: 30,
+        fontStyle: 'italic',
+        fontWeight: 'bold',
+        fill: ['#8a8a8a'],
+        dropShadow: true,
+        dropShadowColor: '#000000',
+        dropShadowBlur: 4,
+        dropShadowAngle: Math.PI / 6,
+        dropShadowDistance: 6,
+        lineJoin: 'round',
+    });
+
     protected _defaultStateSprite: DisplayObject;
 
     protected _disabledStateSprite: DisplayObject;
@@ -36,13 +64,13 @@ export default class Button extends Container implements IOnComplete {
         this._mouserOverStateSprite = mouserOverStateSprite;
         this._slotController = slotController;
         this._renderableDesciption = descriptionText;
-        this._buttonEnabledText = new Text('Spin', { fill: 0xffffff });
+        this._buttonEnabledText = new Text('Spin', this.enabledTextStyle);
         this._buttonEnabledText.anchor.set(0.5);
-        this._buttonEnabledText.position.set(90, 55);
+        this._buttonEnabledText.position.set(94, 55);
         this._buttonEnabledText.visible = false;
-        this._buttonDisabledText = new Text('Spin', { fill: 0x383838 });
+        this._buttonDisabledText = new Text('Spin', this.disabledTextStyle);
         this._buttonDisabledText.anchor.set(0.5);
-        this._buttonDisabledText.position.set(90, 55);
+        this._buttonDisabledText.position.set(94, 55);
         this._buttonDisabledText.visible = false;
 
         this.addChild(this._defaultStateSprite);
