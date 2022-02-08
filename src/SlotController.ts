@@ -10,7 +10,7 @@ export default class SlotController{
 
     private readonly _height: number = 113;
 
-    private readonly rowByRowDelayMultiplier = 0.3;
+    private readonly rowByRowDelayMultiplier = 0.2;
 
     private readonly columnByColumnDelayMultiplier = 0.1;
 
