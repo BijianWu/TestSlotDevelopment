@@ -1,6 +1,8 @@
 import { Container, DisplayObject, InteractionEvent, Loader, Text } from "pixi.js";
 import SlotController from "./SlotController";
 import IOnComplete from "./IOnComplete";
+import IRenderable from "./IRenderable";
+
 export enum buttonStates {
     enabled,
     disabled,
@@ -23,9 +25,9 @@ export default class Button extends Container implements IOnComplete {
 
     private _slotController: SlotController;
 
-    private _descriptionText;
+    private _renderableDesciption: IRenderable;
 
-    public constructor (defaultStateSprite: DisplayObject, disabledStateSprite: DisplayObject, pressedStateSprite: DisplayObject, mouserOverStateSprite: DisplayObject, slotController: SlotController, descriptionText : Text) {
+    public constructor (defaultStateSprite: DisplayObject, disabledStateSprite: DisplayObject, pressedStateSprite: DisplayObject, mouserOverStateSprite: DisplayObject, slotController: SlotController, descriptionText : IRenderable) {
         super();
 
         this._defaultStateSprite = defaultStateSprite;
@@ -33,7 +35,7 @@ export default class Button extends Container implements IOnComplete {
         this._pressedStateSprite = pressedStateSprite;
         this._mouserOverStateSprite = mouserOverStateSprite;
         this._slotController = slotController;
-        this._descriptionText = descriptionText;
+        this._renderableDesciption = descriptionText;
         this._buttonEnabledText = new Text('Spin', { fill: 0xffffff });
         this._buttonEnabledText.anchor.set(0.5);
         this._buttonEnabledText.position.set(90, 55);
@@ -89,13 +91,13 @@ export default class Button extends Container implements IOnComplete {
         this.interactive = true;
         this.addEventListeners();
         this.showState(buttonStates.enabled);
-        this._descriptionText.visible = true;
+        this._renderableDesciption.setToVisible();
     }
 
     public setToBeDisabled = () => {
         this.interactive = false;
         this.showState(buttonStates.disabled);
-        this._descriptionText.visible = false;
+        this._renderableDesciption.setToInvisible();
     }
 
     private _onButtonOver = () => {
