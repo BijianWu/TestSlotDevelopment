@@ -24,8 +24,6 @@ export default class SlotController{
     
     private _slots: Slot[] = [];
 
-    private _isPopulatedAlready: boolean;
-
     private _scenarioString: string;
 
     private _onComplete: IOnComplete;
@@ -41,7 +39,6 @@ export default class SlotController{
         this._container = new Container();
         this._stage.addChild(this._container);
 
-        this._isPopulatedAlready = false;
         this._row = row;
         this._column = column;
 
@@ -49,7 +46,11 @@ export default class SlotController{
         this.initailiseSlots();
 
         this._scenarioString = this.getScenarioData();
-        this.populateSlots();
+    }
+
+    public init = () =>{
+        this._scenarioString = this.getScenarioData();
+        this.setSymbolsToBeInPlace();
     }
 
     public spin(){
@@ -100,22 +101,27 @@ export default class SlotController{
         })
     }
 
-    private async populateSlots(){
-        if(this._isPopulatedAlready === true){
-            const dropOffSymbols: Promise<void>[] = [];
-            for(let i = 0; i < this._totalNumbersOfSlots; i++){
-                let dropOffFinished;
-                dropOffSymbols.push(new Promise((resolve) => {
-                    dropOffFinished = resolve;
-                }));
-                gsap.delayedCall(this.getDropDelay(i), () => {
-                    this._slots[i].dropOff(dropOffFinished);
-                })
-            }
-            
-            await Promise.all(dropOffSymbols);
-            await this.artificalyDelay(0.1);
+    private setSymbolsToBeInPlace(){
+        for(let i = 0; i < this._totalNumbersOfSlots; i++){
+            this._slots[i].setInPlace(this._scenarioString[i]);
         }
+        if(this._onComplete) this._onComplete.onComplete();
+    }
+
+    private async populateSlots(){
+        const dropOffSymbols: Promise<void>[] = [];
+        for(let i = 0; i < this._totalNumbersOfSlots; i++){
+            let dropOffFinished;
+            dropOffSymbols.push(new Promise((resolve) => {
+                dropOffFinished = resolve;
+            }));
+            gsap.delayedCall(this.getDropDelay(i), () => {
+                this._slots[i].dropOff(dropOffFinished);
+            })
+        }
+        
+        await Promise.all(dropOffSymbols);
+        await this.artificalyDelay(0.1);
 
         const dropInSymbols: Promise<void>[] = [];
         for(let i = 0; i < this._totalNumbersOfSlots; i++){
@@ -129,8 +135,7 @@ export default class SlotController{
         }
 
         await Promise.all(dropInSymbols);
-        this._onComplete.onComplete();
-        this._isPopulatedAlready = true;
+        if(this._onComplete) this._onComplete.onComplete();
     }
 
     private getDropDelay = (index) =>{

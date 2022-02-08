@@ -72,6 +72,11 @@ export default class Slot{
             }});
     }
 
+    public setInPlace = (symbolString: string) => {
+        this._sprite.texture = Texture.from(`symbol_${symbolString}`);
+        this._sprite.position.y = this._desPosY;
+    }
+
     private shakingABitWhenLanding = () => {
         const jumpUpHeight = Math.random() * this._maxJumpUpHeightWhenLanding;
 

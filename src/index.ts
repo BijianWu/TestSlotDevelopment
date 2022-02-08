@@ -50,4 +50,6 @@ loader.add("btn_spin_disabled", "./assets/images/btn_spin_disabled.png")
         app.stage.addChild(spinButton);
         slotController.setOnDropOffComplete(spinButton);
         app.stage.addChild(descriptionText.getContainer());
+
+        slotController.init();
     });
