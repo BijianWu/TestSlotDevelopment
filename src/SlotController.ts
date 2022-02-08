@@ -1,6 +1,7 @@
 import { Container, Graphics } from "pixi.js";
 import { gsap } from 'gsap';
 import Slot from "./Slot";
+import IOnComplete from "./IOnComplete";
 
 export default class SlotController{
     private readonly _allSymbolsStrings: string[] = ["1", "2", "3", "4", "5", "6", "7", "8"];
@@ -27,11 +28,11 @@ export default class SlotController{
 
     private _scenarioString: string;
 
-    private _onComplete: any;
+    private _onComplete: IOnComplete;
     
     private _container: Container;
 
-    public setOnDropOffComplete = (onComplete: any) => {
+    public setOnDropOffComplete = (onComplete: IOnComplete) => {
         this._onComplete = onComplete;
     }
 
@@ -128,7 +129,7 @@ export default class SlotController{
         }
 
         await Promise.all(dropInSymbols);
-        this._onComplete();
+        this._onComplete.onComplete();
         this._isPopulatedAlready = true;
     }
 

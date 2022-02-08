@@ -49,6 +49,6 @@ loader.add("btn_spin_disabled", "./assets/images/btn_spin_disabled.png")
         spinButton.width = 100;
         spinButton.height = 100;
         app.stage.addChild(spinButton);
-        slotController.setOnDropOffComplete(spinButton.setTobeEnable);
+        slotController.setOnDropOffComplete(spinButton);
         app.stage.addChild(descriptionText);
     });

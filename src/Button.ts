@@ -1,6 +1,6 @@
 import { Container, DisplayObject, InteractionEvent, Loader, Text } from "pixi.js";
 import SlotController from "./SlotController";
-
+import IOnComplete from "./IOnComplete";
 export enum buttonStates {
     enabled,
     disabled,
@@ -8,7 +8,7 @@ export enum buttonStates {
     over
 }
 
-export default class Button extends Container {
+export default class Button extends Container implements IOnComplete {
     protected _defaultStateSprite: DisplayObject;
 
     protected _disabledStateSprite: DisplayObject;
@@ -54,6 +54,9 @@ export default class Button extends Container {
         this.interactive = true;
         this.showState(buttonStates.enabled);  
     }
+    onComplete = () => {
+        this.setTobeEnable();
+    }
 
     private _onButtonDown= () => {
         this.showState(buttonStates.pressed);
@@ -82,7 +85,7 @@ export default class Button extends Container {
         buttonClickSound.play();
     }
 
-    public setTobeEnable = () => {
+    private setTobeEnable = () => {
         this.interactive = true;
         this.addEventListeners();
         this.showState(buttonStates.enabled);
